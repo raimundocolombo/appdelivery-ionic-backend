@@ -8,13 +8,18 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import br.com.bsbmob.appdelivery.domain.Categoria;
+import br.com.bsbmob.appdelivery.domain.Produto;
 import br.com.bsbmob.appdelivery.repositories.CategoriaRepository;
+import br.com.bsbmob.appdelivery.repositories.ProdutoRepository;
 
 @SpringBootApplication
 public class AppDeliveryApplication implements CommandLineRunner {
 	
 	@Autowired
 	private CategoriaRepository categoriaRepository;
+	
+	@Autowired
+	private ProdutoRepository produtoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AppDeliveryApplication.class, args);
@@ -22,9 +27,25 @@ public class AppDeliveryApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... arg0) throws Exception {
-		Categoria cat1 = new Categoria(null, "Combos");
-		Categoria cat2 = new Categoria(null, "Potes");
+		Categoria cat1 = new Categoria(null, "Informática");
+		Categoria cat2 = new Categoria(null, "Escritório");
+		
+		Produto p1 = new Produto(null, "Computador", 2500.00);
+		Produto p2 = new Produto(null, "Impressora", 850.00);
+		Produto p3 = new Produto(null, "Mouse", 85.00);
+		
+		cat1.getProdutos().addAll(Arrays.asList(p1, p2, p3));
+		
+		cat2.getProdutos().addAll(Arrays.asList(p2));
+		
+		p1.getCategorias().addAll(Arrays.asList(cat1));
+		
+		p2.getCategorias().addAll(Arrays.asList(cat1, cat2));
+		
+		p3.getCategorias().addAll(Arrays.asList(cat1));
 		
 		categoriaRepository.save(Arrays.asList(cat1, cat2));
+		
+		produtoRepository.save(Arrays.asList(p1,p2,p3));
 	}
 }
