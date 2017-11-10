@@ -1,5 +1,7 @@
 package br.com.bsbmob.appdelivery;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +14,20 @@ import br.com.bsbmob.appdelivery.domain.Cidade;
 import br.com.bsbmob.appdelivery.domain.Cliente;
 import br.com.bsbmob.appdelivery.domain.Endereco;
 import br.com.bsbmob.appdelivery.domain.Estado;
+import br.com.bsbmob.appdelivery.domain.Pagamento;
+import br.com.bsbmob.appdelivery.domain.PagamentoComBoleto;
+import br.com.bsbmob.appdelivery.domain.PagamentoComCartao;
+import br.com.bsbmob.appdelivery.domain.Pedido;
 import br.com.bsbmob.appdelivery.domain.Produto;
+import br.com.bsbmob.appdelivery.domain.enums.EstadoPagamento;
 import br.com.bsbmob.appdelivery.domain.enums.TipoCliente;
 import br.com.bsbmob.appdelivery.repositories.CategoriaRepository;
 import br.com.bsbmob.appdelivery.repositories.CidadeRepository;
 import br.com.bsbmob.appdelivery.repositories.ClienteRepository;
 import br.com.bsbmob.appdelivery.repositories.EnderecoRepository;
 import br.com.bsbmob.appdelivery.repositories.EstadoRepository;
+import br.com.bsbmob.appdelivery.repositories.PagamentoRepository;
+import br.com.bsbmob.appdelivery.repositories.PedidoRepository;
 import br.com.bsbmob.appdelivery.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -40,7 +49,14 @@ public class AppDeliveryApplication implements CommandLineRunner {
 	private ClienteRepository clienteRepository;
 	
 	@Autowired
+	private PedidoRepository pedidoRepository;
+	
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
 	private EnderecoRepository enderecoRepository;
+	
 
 	public static void main(String[] args) {
 		SpringApplication.run(AppDeliveryApplication.class, args);
@@ -53,7 +69,7 @@ public class AppDeliveryApplication implements CommandLineRunner {
 		inserirEstadosECidades();
 	}
 
-	private void inserirEstadosECidades() {
+	private void inserirEstadosECidades() throws ParseException {
 		Estado est1 = new Estado(null, "Minas Gerais");
 		Estado est2 = new Estado(null, "São Paulo");
 		
@@ -93,7 +109,7 @@ public class AppDeliveryApplication implements CommandLineRunner {
 		produtoRepository.save(Arrays.asList(p1,p2,p3));
 	}
 	
-	private void inserirClientes(Cidade c1, Cidade c2) {
+	private void inserirClientes(Cidade c1, Cidade c2) throws ParseException {
 		Cliente cli1 = new Cliente(null,"Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOAFISICA);
 		
 		cli1.getTelefones().addAll(Arrays.asList("27363323","93838393"));
@@ -107,6 +123,21 @@ public class AppDeliveryApplication implements CommandLineRunner {
 		clienteRepository.save(Arrays.asList(cli1));
 		enderecoRepository.save(Arrays.asList(e1,e2));
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+		
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
+		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:35"), cli1, e2);
+		
+		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pagto1);
+		
+		Pagamento pagto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"), null);
+		ped2.setPagamento(pagto2);
+		
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+		
+		pedidoRepository.save(Arrays.asList(ped1, ped2));
+		pagamentoRepository.save(Arrays.asList(pagto1, pagto2));
 		
 	}
 }
