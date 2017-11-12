@@ -1,5 +1,7 @@
 package br.com.bsbmob.appdelivery.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,18 @@ public class CategoriaService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir uma categoria que possua produtos");
 		}
+	}
+	
+	public List<Categoria> findAll() {
+		
+		List<Categoria> list = repo.findAll();
+		
+		if (list == null || list.size() == 0) {
+			throw new ObjectNotFoundException("Nenhuma Categoria não encontrada!, Tipo: " + Categoria.class.getName());
+		}
+			
+		return list;
+		
 	}
 
 }

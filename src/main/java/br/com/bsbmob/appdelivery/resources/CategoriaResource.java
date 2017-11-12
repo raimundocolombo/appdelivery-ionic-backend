@@ -1,6 +1,8 @@
 package br.com.bsbmob.appdelivery.resources;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.bsbmob.appdelivery.domain.Categoria;
+import br.com.bsbmob.appdelivery.dto.CategoriaDTO;
 import br.com.bsbmob.appdelivery.services.CategoriaService;
 
 @RestController
@@ -22,7 +25,7 @@ public class CategoriaResource {
 	private CategoriaService service;
 	
 	@RequestMapping(value="/{id}",method=RequestMethod.GET)
-	public ResponseEntity<Categoria> listar(@PathVariable Integer id) {
+	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
 		
 		Categoria cat1 = service.find(id);
 		
@@ -49,6 +52,16 @@ public class CategoriaResource {
 		service.delete(id);
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(method=RequestMethod.GET)
+	public ResponseEntity<List<CategoriaDTO>> findAll() {
+		
+		List<Categoria> list = service.findAll();
+		
+		List<CategoriaDTO> listDto = list.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());
+		
+		return ResponseEntity.ok().body(listDto);
 	}
 
 }
