@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.bsbmob.appdelivery.domain.Categoria;
+import br.com.bsbmob.appdelivery.dto.CategoriaDTO;
 import br.com.bsbmob.appdelivery.repositories.CategoriaRepository;
 import br.com.bsbmob.appdelivery.services.exception.DataIntegrityException;
 import br.com.bsbmob.appdelivery.services.exception.ObjectNotFoundException;
@@ -67,6 +68,10 @@ public class CategoriaService {
 		PageRequest pageRequest = new PageRequest(numPage, linesPerPage, Direction.valueOf(direction), orderBy);
 		
 		return repo.findAll(pageRequest);
+	}
+	
+	public Categoria fromDto(CategoriaDTO objDto) {
+		return new Categoria(objDto.getId(), objDto.getNome());
 	}
 
 }
