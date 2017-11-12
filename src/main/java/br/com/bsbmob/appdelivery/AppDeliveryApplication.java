@@ -69,24 +69,30 @@ public class AppDeliveryApplication implements CommandLineRunner {
 	@Override
 	public void run(String... arg0) throws Exception {
 	    // INSERIR CATEGORIAS E PRODUTOS
-		Categoria cat1 = new Categoria(null, "Informática");
-		Categoria cat2 = new Categoria(null, "Escritório");
+		Categoria cat1 = new Categoria(null, "Sanduíches");
+		Categoria cat2 = new Categoria(null, "Combos");
+		Categoria cat3 = new Categoria(null, "Potes");
+		Categoria cat4 = new Categoria(null, "Molhos");
+		Categoria cat5 = new Categoria(null, "Pratos Executivos");
+		Categoria cat6 = new Categoria(null, "Bebidas");
 		
-		Produto p1 = new Produto(null, "Computador", 2500.00);
-		Produto p2 = new Produto(null, "Impressora", 850.00);
-		Produto p3 = new Produto(null, "Mouse", 85.00);
+		Produto p1 = new Produto(null, "Trio Frango", 28.00);
+		Produto p2 = new Produto(null, "Pote de Coxa de frango", 48.00);
+		Produto p3 = new Produto(null, "Molho Barbecue", 85.00);
 		
-		cat1.getProdutos().addAll(Arrays.asList(p1, p2, p3));
+		cat1.getProdutos().addAll(Arrays.asList(p1));
 		
-		cat2.getProdutos().addAll(Arrays.asList(p2));
+		cat3.getProdutos().addAll(Arrays.asList(p2));
+		
+		cat4.getProdutos().addAll(Arrays.asList(p3));
 		
 		p1.getCategorias().addAll(Arrays.asList(cat1));
 		
-		p2.getCategorias().addAll(Arrays.asList(cat1, cat2));
+		p2.getCategorias().addAll(Arrays.asList(cat3));
 		
-		p3.getCategorias().addAll(Arrays.asList(cat1));
+		p3.getCategorias().addAll(Arrays.asList(cat4));
 		
-		categoriaRepository.save(Arrays.asList(cat1, cat2));
+		categoriaRepository.save(Arrays.asList(cat1, cat2, cat3, cat4, cat5, cat6));
 		
 		produtoRepository.save(Arrays.asList(p1,p2,p3));
 		// INSERIR CATEGORIAS E PRODUTOS
