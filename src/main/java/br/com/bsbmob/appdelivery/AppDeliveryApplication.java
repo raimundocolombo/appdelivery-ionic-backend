@@ -14,6 +14,7 @@ import br.com.bsbmob.appdelivery.domain.Cidade;
 import br.com.bsbmob.appdelivery.domain.Cliente;
 import br.com.bsbmob.appdelivery.domain.Endereco;
 import br.com.bsbmob.appdelivery.domain.Estado;
+import br.com.bsbmob.appdelivery.domain.ItemPedido;
 import br.com.bsbmob.appdelivery.domain.Pagamento;
 import br.com.bsbmob.appdelivery.domain.PagamentoComBoleto;
 import br.com.bsbmob.appdelivery.domain.PagamentoComCartao;
@@ -26,6 +27,7 @@ import br.com.bsbmob.appdelivery.repositories.CidadeRepository;
 import br.com.bsbmob.appdelivery.repositories.ClienteRepository;
 import br.com.bsbmob.appdelivery.repositories.EnderecoRepository;
 import br.com.bsbmob.appdelivery.repositories.EstadoRepository;
+import br.com.bsbmob.appdelivery.repositories.ItemPedidoRepository;
 import br.com.bsbmob.appdelivery.repositories.PagamentoRepository;
 import br.com.bsbmob.appdelivery.repositories.PedidoRepository;
 import br.com.bsbmob.appdelivery.repositories.ProdutoRepository;
@@ -57,6 +59,8 @@ public class AppDeliveryApplication implements CommandLineRunner {
 	@Autowired
 	private EnderecoRepository enderecoRepository;
 	
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AppDeliveryApplication.class, args);
@@ -64,29 +68,7 @@ public class AppDeliveryApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... arg0) throws Exception {
-		inserirCategoriasEProdutos();
-		
-		inserirEstadosECidades();
-	}
-
-	private void inserirEstadosECidades() throws ParseException {
-		Estado est1 = new Estado(null, "Minas Gerais");
-		Estado est2 = new Estado(null, "São Paulo");
-		
-		Cidade c1 = new Cidade(null, "Uberlândia", est1);
-		Cidade c2 = new Cidade(null, "São Paulo", est2);
-		Cidade c3 = new Cidade(null, "Campinas", est2);
-		
-		est1.getCidades().addAll(Arrays.asList(c1));
-		est2.getCidades().addAll(Arrays.asList(c2,c3));
-		
-		estadoRepository.save(Arrays.asList(est1,est2));
-		cidadeRepository.save(Arrays.asList(c1,c2,c3));
-		
-		inserirClientes(c1, c2);
-	}
-
-	private void inserirCategoriasEProdutos() {
+	    // INSERIR CATEGORIAS E PRODUTOS
 		Categoria cat1 = new Categoria(null, "Informática");
 		Categoria cat2 = new Categoria(null, "Escritório");
 		
@@ -107,9 +89,24 @@ public class AppDeliveryApplication implements CommandLineRunner {
 		categoriaRepository.save(Arrays.asList(cat1, cat2));
 		
 		produtoRepository.save(Arrays.asList(p1,p2,p3));
-	}
-	
-	private void inserirClientes(Cidade c1, Cidade c2) throws ParseException {
+		// INSERIR CATEGORIAS E PRODUTOS
+		
+		// INSERIR ESTADOS E CIDADES
+		Estado est1 = new Estado(null, "Minas Gerais");
+		Estado est2 = new Estado(null, "São Paulo");
+		
+		Cidade c1 = new Cidade(null, "Uberlândia", est1);
+		Cidade c2 = new Cidade(null, "São Paulo", est2);
+		Cidade c3 = new Cidade(null, "Campinas", est2);
+		
+		est1.getCidades().addAll(Arrays.asList(c1));
+		est2.getCidades().addAll(Arrays.asList(c2,c3));
+		
+		estadoRepository.save(Arrays.asList(est1,est2));
+		cidadeRepository.save(Arrays.asList(c1,c2,c3));
+		// INSERIR ESTADOS E CIDADES
+		
+		// INSERIR CLIENTES, PEDIDOS, PAGAMENTOS E ITENS DE PEDIDOS
 		Cliente cli1 = new Cliente(null,"Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOAFISICA);
 		
 		cli1.getTelefones().addAll(Arrays.asList("27363323","93838393"));
@@ -139,5 +136,18 @@ public class AppDeliveryApplication implements CommandLineRunner {
 		pedidoRepository.save(Arrays.asList(ped1, ped2));
 		pagamentoRepository.save(Arrays.asList(pagto1, pagto2));
 		
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+		
+		itemPedidoRepository.save(Arrays.asList(ip1,ip2,ip3));
 	}
+
 }
