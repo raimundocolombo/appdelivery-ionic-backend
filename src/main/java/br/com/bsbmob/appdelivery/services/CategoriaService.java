@@ -19,7 +19,7 @@ public class CategoriaService {
 		Categoria cat = repo.findOne(id);
 		
 		if (cat == null) {
-			throw new ObjectNotFoundException("Categoria não encontrada! Id: " + id + ", Tipo: " + Cliente.class.getName());
+			throw new ObjectNotFoundException("Categoria não encontrada! Id: " + id + ", Tipo: " + Categoria.class.getName());
 		}
 			
 		return cat;
