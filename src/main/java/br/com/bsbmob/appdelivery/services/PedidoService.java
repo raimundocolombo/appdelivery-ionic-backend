@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.bsbmob.appdelivery.domain.Pedido;
-import br.com.bsbmob.appdelivery.domain.Cliente;
 import br.com.bsbmob.appdelivery.repositories.PedidoRepository;
 import br.com.bsbmob.appdelivery.services.exception.ObjectNotFoundException;
 
