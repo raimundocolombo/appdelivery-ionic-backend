@@ -22,15 +22,11 @@ public class CategoriaService {
 	private CategoriaRepository repo;
 	
 	public Categoria find(Integer id) {
-		
 		Categoria cat = repo.findOne(id);
-		
 		if (cat == null) {
 			throw new ObjectNotFoundException("Categoria não encontrada! Id: " + id + ", Tipo: " + Categoria.class.getName());
 		}
-			
 		return cat;
-		
 	}
 	
 	public Categoria inserir(Categoria obj) {
