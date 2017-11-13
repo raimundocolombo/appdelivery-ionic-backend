@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.bsbmob.appdelivery.domain.Cliente;
 import br.com.bsbmob.appdelivery.dto.ClienteDTO;
+import br.com.bsbmob.appdelivery.dto.ClienteNewDTO;
 import br.com.bsbmob.appdelivery.services.ClienteService;
 
 @RestController
@@ -36,14 +37,14 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(cat1);
 	}
 	
-//	@RequestMapping(method=RequestMethod.POST)
-//	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteDTO objDto) {
-//		Cliente obj = service.fromDto(objDto);
-//		obj = service.inserir(obj);
-//		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-//				.path("/{id}").buildAndExpand(obj.getId()).toUri();
-//		return ResponseEntity.created(uri).build();
-//	}
+	@RequestMapping(method=RequestMethod.POST)
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDto) {
+		Cliente obj = service.fromDto(objDto);
+		obj = service.inserir(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).build();
+	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid @RequestBody ClienteDTO objDto, @PathVariable Integer id) {
