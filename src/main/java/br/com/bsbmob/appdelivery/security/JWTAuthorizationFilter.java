@@ -23,7 +23,6 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 		super(authenticationManager);
 		this.jwtUtil = jwtUtil;
 		this.userDetailService = userDetailService;
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
