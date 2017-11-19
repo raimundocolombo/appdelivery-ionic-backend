@@ -13,12 +13,15 @@ import org.springframework.stereotype.Service;
 import br.com.bsbmob.appdelivery.domain.Cidade;
 import br.com.bsbmob.appdelivery.domain.Cliente;
 import br.com.bsbmob.appdelivery.domain.Endereco;
+import br.com.bsbmob.appdelivery.domain.enums.Perfil;
 import br.com.bsbmob.appdelivery.domain.enums.TipoCliente;
 import br.com.bsbmob.appdelivery.dto.ClienteDTO;
 import br.com.bsbmob.appdelivery.dto.ClienteNewDTO;
 import br.com.bsbmob.appdelivery.repositories.CidadeRepository;
 import br.com.bsbmob.appdelivery.repositories.ClienteRepository;
 import br.com.bsbmob.appdelivery.repositories.EnderecoRepository;
+import br.com.bsbmob.appdelivery.security.UserSS;
+import br.com.bsbmob.appdelivery.services.exception.AuthorizationException;
 import br.com.bsbmob.appdelivery.services.exception.DataIntegrityException;
 import br.com.bsbmob.appdelivery.services.exception.ObjectNotFoundException;
 
@@ -38,6 +41,17 @@ public class ClienteService {
 	private BCryptPasswordEncoder bCrypt;
 	
 	public Cliente find(Integer id) {
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("Acesso Negado!");
+		} else {
+			boolean ehAdmin = user.hasRole(Perfil.ADMIN);
+			boolean mesmoId = id.equals(user.getId());
+			if (!ehAdmin && !mesmoId) {
+				throw new AuthorizationException("Acesso Negado!");
+			}
+		}
+		
 		Cliente cli = repo.findOne(id);
 		if (cli == null) {
 			throw new ObjectNotFoundException("Cliente não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName());
